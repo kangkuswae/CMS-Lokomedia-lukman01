@@ -3,21 +3,21 @@ session_start();
 include "../config/koneksi.php";
 include "../config/library.php";
 
-$module=$_GET[module];
-$act=$_GET[act];
+$module=$_GET['module'];
+$act=$_GET['act'];
 
 
 // Menghapus data
 if (isset($module) AND $act=='hapus'){
-  mysql_query("DELETE FROM ".$module." WHERE id_".$module."='$_GET[id]'");
+  mysqli_query($conn,"DELETE FROM ".$module." WHERE id_".$module."='$_GET[id]'");
   header('location:media.php?module='.$module);
 }
 
 
 // Input user
 elseif ($module=='user' AND $act=='input'){
-  $pass=md5($_POST[password]);
-  mysql_query("INSERT INTO user(id_user,
+  $pass=md5($_POST['password']);
+  mysqli_query($conn,"INSERT INTO user(id_user,
                                 password,
                                 nama_lengkap,
                                 email) 
@@ -31,16 +31,16 @@ elseif ($module=='user' AND $act=='input'){
 // Update user
 elseif ($module=='user' AND $act=='update'){
   // Apabila password tidak diubah
-  if (empty($_POST[password])) {
-    mysql_query("UPDATE user SET id_user      = '$_POST[id_user]',
+  if (empty($_POST['password'])) {
+    mysqli_query($conn,"UPDATE user SET id_user      = '$_POST[id_user]',
                                  nama_lengkap = '$_POST[nama_lengkap]',
                                  email        = '$_POST[email]'  
                            WHERE id_user      = '$_POST[id]'");
   }
   // Apabila password diubah
   else{
-    $pass=md5($_POST[password]);
-    mysql_query("UPDATE user SET id_user      = '$_POST[id_user]',
+    $pass=md5($_POST['password']);
+    mysqli_query($conn,"UPDATE user SET id_user      = '$_POST[id_user]',
                                  password     = '$pass',
                                  nama_lengkap = '$_POST[nama_lengkap]',
                                  email        = '$_POST[email]'  
@@ -52,7 +52,7 @@ elseif ($module=='user' AND $act=='update'){
 
 // Input modul
 elseif ($module=='modul' AND $act=='input'){
-  mysql_query("INSERT INTO modul(nama_modul,
+  mysqli_query($conn,"INSERT INTO modul(nama_modul,
                                  link,
                                  publish,
                                  aktif,
@@ -69,7 +69,7 @@ elseif ($module=='modul' AND $act=='input'){
 
 // Update modul
 elseif ($module=='modul' AND $act=='update'){
-  mysql_query("UPDATE modul SET nama_modul = '$_POST[nama_modul]',
+  mysqli_query($conn,"UPDATE modul SET nama_modul = '$_POST[nama_modul]',
                                 link       = '$_POST[link]',
                                 publish    = '$_POST[publish]',
                                 aktif      = '$_POST[aktif]',
@@ -85,7 +85,7 @@ elseif ($module=='agenda' AND $act=='input'){
   $mulai=sprintf("%02d%02d%02d",$_POST[thn_mulai],$_POST[bln_mulai],$_POST[tgl_mulai]);
   $selesai=sprintf("%02d%02d%02d",$_POST[thn_selesai],$_POST[bln_selesai],$_POST[tgl_selesai]);
   
-  mysql_query("INSERT INTO agenda(tema,
+  mysqli_query($conn,"INSERT INTO agenda(tema,
                                   isi_agenda,
                                   tempat,
                                   tgl_mulai,
@@ -107,7 +107,7 @@ elseif ($module=='agenda' AND $act=='update'){
   $mulai=sprintf("%02d%02d%02d",$_POST[thn_mulai],$_POST[bln_mulai],$_POST[tgl_mulai]);
   $selesai=sprintf("%02d%02d%02d",$_POST[thn_selesai],$_POST[bln_selesai],$_POST[tgl_selesai]);
 
-  mysql_query("UPDATE agenda SET tema        = '$_POST[tema]',
+  mysqli_query($conn,"UPDATE agenda SET tema        = '$_POST[tema]',
                                  isi_agenda  = '$_POST[isi_agenda]',
                                  tgl_mulai   = '$mulai',
                                  tgl_selesai = '$selesai',
@@ -121,7 +121,7 @@ elseif ($module=='agenda' AND $act=='update'){
 elseif ($module=='pengumuman' AND $act=='input'){
   $tanggal=sprintf("%02d%02d%02d",$_POST[thn],$_POST[bln],$_POST[tgl]);
   
-  mysql_query("INSERT INTO pengumuman(judul,
+  mysqli_query($conn,"INSERT INTO pengumuman(judul,
                                       isi,
                                       tanggal,
                                       tgl_posting,
@@ -138,7 +138,7 @@ elseif ($module=='pengumuman' AND $act=='input'){
 elseif ($module=='pengumuman' AND $act=='update'){
   $tanggal=sprintf("%02d%02d%02d",$_POST[thn],$_POST[bln],$_POST[tgl]);
 
-  mysql_query("UPDATE pengumuman SET judul         = '$_POST[judul]',
+  mysqli_query($conn,"UPDATE pengumuman SET judul         = '$_POST[judul]',
                                      isi           = '$_POST[isi_pengumuman]',
                                      tanggal       = '$tanggal'
                                WHERE id_pengumuman = '$_POST[id]'");
@@ -165,7 +165,7 @@ elseif ($module=='berita' AND $act=='input'){
     }
     else{
       move_uploaded_file($lokasi_file,"foto_berita/$nama_file_unik");
-      mysql_query("INSERT INTO berita(judul,
+      mysqli_query($conn,"INSERT INTO berita(judul,
                                       id_kategori,
                                       isi_berita,
                                       id_user,
@@ -185,7 +185,7 @@ elseif ($module=='berita' AND $act=='input'){
    }
    }
    else{
-     mysql_query("INSERT INTO berita(judul,
+     mysqli_query($conn,"INSERT INTO berita(judul,
                                      id_kategori,
                                      isi_berita,
                                      id_user,
@@ -210,14 +210,14 @@ elseif ($module=='berita' AND $act=='update'){
 
   // Apabila gambar tidak diganti
   if (empty($lokasi_file)){
-    mysql_query("UPDATE berita SET judul       = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE berita SET judul       = '$_POST[judul]',
                                    id_kategori = '$_POST[kategori]',
                                    isi_berita  = '$_POST[isi_berita]'  
                              WHERE id_berita   = '$_POST[id]'");
   }
   else{
     move_uploaded_file($lokasi_file,"foto_berita/$nama_file");
-    mysql_query("UPDATE berita SET judul       = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE berita SET judul       = '$_POST[judul]',
                                    id_kategori = '$_POST[kategori]',
                                    isi_berita  = '$_POST[isi_berita]',
                                    gambar      = '$nama_file'   
@@ -235,7 +235,7 @@ elseif ($module=='banner' AND $act=='input'){
   // Apabila ada gambar yang diupload
   if (!empty($lokasi_file)){
     move_uploaded_file($lokasi_file,"foto_berita/$nama_file");
-    mysql_query("INSERT INTO banner(judul,
+    mysqli_query($conn,"INSERT INTO banner(judul,
                                     url,
                                     tgl_posting,
                                     gambar) 
@@ -245,7 +245,7 @@ elseif ($module=='banner' AND $act=='input'){
                                    '$nama_file')");
   }
   else{
-    mysql_query("INSERT INTO banner(judul,
+    mysqli_query($conn,"INSERT INTO banner(judul,
                                     tgl_posting,
                                     url) 
                             VALUES('$_POST[judul]',
@@ -262,13 +262,13 @@ elseif ($module=='banner' AND $act=='update'){
 
   // Apabila gambar tidak diganti
   if (empty($lokasi_file)){
-    mysql_query("UPDATE banner SET judul     = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE banner SET judul     = '$_POST[judul]',
                                    url       = '$_POST[link]'
                              WHERE id_banner = '$_POST[id]'");
   }
   else{
     move_uploaded_file($lokasi_file,"foto_berita/$nama_file");
-    mysql_query("UPDATE banner SET judul     = '$_POST[judul]',
+    mysqli_query($conn,"UPDATE banner SET judul     = '$_POST[judul]',
                                    url       = '$_POST[link]',
                                    gambar    = '$nama_file'   
                              WHERE id_banner = '$_POST[id]'");
@@ -283,12 +283,12 @@ elseif ($module=='profil' AND $act=='update'){
 
   // Apabila gambar tidak diganti
   if (empty($lokasi_file)){
-    mysql_query("UPDATE modul SET static_content = '$_POST[isi]'
+    mysqli_query($conn,"UPDATE modul SET static_content = '$_POST[isi]'
                             WHERE id_modul       = '$_POST[id]'");
   }
   else{
     move_uploaded_file($lokasi_file,"foto_berita/$nama_file");
-    mysql_query("UPDATE modul SET static_content = '$_POST[isi]',
+    mysqli_query($conn,"UPDATE modul SET static_content = '$_POST[isi]',
                                   gambar         = '$nama_file'    
                             WHERE id_modul       = '$_POST[id]'");
   }

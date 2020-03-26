@@ -1,14 +1,14 @@
 <?php
-switch($_GET[act]){
+switch(isset($_GET['act']) ? $_GET['act']:''){
   // Tampil User
   default:
     echo "<h2>User</h2>
           <input type=button value='Tambah User' onclick=location.href='?module=user&act=tambahuser'>
           <table>
           <tr><th>no</th><th>username</th><th>nama lengkap</th><th>email</th><th>aksi</th></tr>"; 
-    $tampil=mysql_query("SELECT * FROM user ORDER BY id_user");
+    $tampil=mysqli_query($conn,"SELECT * FROM user ORDER BY id_user");
     $no=1;
-    while ($r=mysql_fetch_array($tampil)){
+    while ($r=mysqli_fetch_array($tampil)){
        echo "<tr><td>$no</td>
              <td>$r[id_user]</td>
              <td>$r[nama_lengkap]</td>
@@ -35,8 +35,8 @@ switch($_GET[act]){
      break;
     
   case "edituser":
-    $edit=mysql_query("SELECT * FROM user WHERE id_user='$_GET[id]'");
-    $r=mysql_fetch_array($edit);
+    $edit=mysqli_query($conn,"SELECT * FROM user WHERE id_user='$_GET[id]'");
+    $r=mysqli_fetch_array($edit);
 
     echo "<h2>Edit User</h2>
           <form method=POST action=./aksi.php?module=user&act=update>

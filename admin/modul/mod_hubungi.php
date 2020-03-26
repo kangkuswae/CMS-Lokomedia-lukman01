@@ -1,14 +1,14 @@
 <?php
-switch($_GET[act]){
+switch(isset($_GET['act']) ? $_GET['act']:''){
   // Tampil Hubungi Kami
   default:
     echo "<h2>Hubungi Kami</h2>
           <table>
           <tr><th>no</th><th>nama</th><th>email</th><th>subjek</th><th>tanggal</th><th>aksi</th></tr>";
     $no=1;
-    $tampil=mysql_query("SELECT * FROM hubungi ORDER BY id_hubungi desc");  
-    while ($r=mysql_fetch_array($tampil)){
-      $tgl=tgl_indo($r[tanggal]);
+    $tampil=mysqli_query($conn,"SELECT * FROM hubungi ORDER BY id_hubungi desc");  
+    while ($r=mysqli_fetch_array($tampil)){
+      $tgl=tgl_indo($r['tanggal']);
       echo "<tr><td>$no</td>
                 <td>$r[nama]</td>
                 <td><a href=?module=hubungi&act=balasemail&id=$r[id_hubungi]>$r[email]</a></td>
@@ -22,8 +22,8 @@ switch($_GET[act]){
     break;
   
   case "balasemail":
-    $tampil = mysql_query("SELECT * FROM hubungi WHERE id_hubungi='$_GET[id]'");
-    $r      = mysql_fetch_array($tampil);
+    $tampil = mysqli_query($conn,"SELECT * FROM hubungi WHERE id_hubungi='$_GET[id]'");
+    $r      = mysqli_fetch_array($tampil);
 
     echo "<h2>Reply Email</h2>
           <form method=POST action='?module=hubungi&act=kirimemail'>
@@ -42,7 +42,7 @@ switch($_GET[act]){
      break;
     
   case "kirimemail":
-    mail($_POST[email],$_POST[subjek],$_POST[pesan],"From: redaksi@bukulokomedia.com");
+    mail($_POST['email'],$_POST['subjek'],$_POST['pesan'],"From: redaksi@bukulokomedia.com");
     echo "<h2>Status Email</h2>
           <p>Email telah sukses terkirim ke tujuan</p>
           <p>[ <a href=javascript:history.go(-2)>Kembali</a> ]</p>";	 		  

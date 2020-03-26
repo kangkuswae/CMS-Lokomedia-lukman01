@@ -1,15 +1,15 @@
 <?php
-switch($_GET[act]){
+switch(isset($_GET['act']) ? $_GET['act']:''){
   // Tampil Banner
   default:
     echo "<h2>Banner</h2>
           <input type=button value='Tambah Banner' onclick=location.href='?module=banner&act=tambahbanner'>
           <table>
           <tr><th>no</th><th>judul</th><th>link</th><th>tgl. posting</th><th>aksi</th></tr>";
-    $tampil=mysql_query("SELECT * FROM banner ORDER BY id_banner DESC");
+    $tampil=mysqli_query($conn,"SELECT * FROM banner ORDER BY id_banner DESC");
     $no=1;
-    while ($r=mysql_fetch_array($tampil)){
-      $tgl=tgl_indo($r[tgl_posting]);
+    while ($r=mysqli_fetch_array($tampil)){
+      $tgl=tgl_indo($r['tgl_posting']);
       echo "<tr><td>$no</td>
                 <td>$r[judul]</td>
                 <td><a href=$r[url]>$r[url]</a></td>
@@ -35,8 +35,8 @@ switch($_GET[act]){
      break;
     
   case "editbanner":
-    $edit = mysql_query("SELECT * FROM banner WHERE id_banner='$_GET[id]'");
-    $r    = mysql_fetch_array($edit);
+    $edit = mysqli_query($conn,"SELECT * FROM banner WHERE id_banner='$_GET[id]'");
+    $r    = mysqli_fetch_array($edit);
 
     echo "<h2>Edit Banner</h2>
           <form method=POST enctype='multipart/form-data' action=./aksi.php?module=banner&act=update>

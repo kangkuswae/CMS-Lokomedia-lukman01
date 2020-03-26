@@ -24,15 +24,16 @@ body{
 	padding-left: 2em;
 }
 #menu {
-	position: absolute;
-	top: 90px;
+	position: relative;
+	float: left;
+	top: 23px;
 	left: 0;
 	width: 180px;
 }
 #menu ul {
 	list-style: none;
-	margin: 0;
-	padding: 0;
+	margin: 0 0 25 0;
+	padding: 0 0 10 0;
 	border: none;
 }
 #menu li {
@@ -107,6 +108,11 @@ input,textarea,select{
 	font-family: Tahoma; 
 	font-size: 8pt; 
 }
+
+#clearfix{
+	clear:both;
+}
+
 #footer{
 	padding: 20px 0 10px 255px;
 	font-size: 70%;
